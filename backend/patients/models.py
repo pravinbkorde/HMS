@@ -1,5 +1,16 @@
 from django.db import models
 from django.db import transaction
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('receptionist', 'Receptionist'),
+        ('doctor', 'Doctor'),
+    )
+    role = models.CharField(max_length=20,choices=ROLE_CHOICES)
+
 
 class PatientsInfo(models.Model):
     patient_id = models.CharField(max_length=20, unique=True, blank=True)

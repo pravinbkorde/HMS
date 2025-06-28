@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { use, useEffect, useRef, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -13,6 +13,7 @@ import {
   CNavLink,
   CNavItem,
   useColorModes,
+  CButton,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -28,14 +29,14 @@ import {
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
-
+import API from '../api'
 const AppHeader = () => {
   const headerRef = useRef()
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-
+  const navigate = useNavigate();
   useEffect(() => {
     document.addEventListener('scroll', () => {
       headerRef.current &&
@@ -108,6 +109,23 @@ const AppHeader = () => {
       setColorMode('dark');
     }
   };
+
+const handleLogout = async () => {
+  try {
+    // Make logout request to backend (destroys session)
+    await API.post('patients/logout/', {}, { withCredentials: true });
+
+    // Clear JWT tokens from localStorage
+    sessionStorage.clear()
+    console.log("Logout Successful and session data clear")
+
+    // Redirect to login page or home
+    navigate('/login');
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
+
   return (
     <CHeader position="sticky" className="mb-4 p-0" ref={headerRef}>
       <CContainer className="border-bottom px-4" fluid>
@@ -198,6 +216,7 @@ const AppHeader = () => {
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
           </li>
+            <CButton color="primary" variant="ghost" onClick={handleLogout} >Logout</CButton>
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>

@@ -1,10 +1,11 @@
 import routes from "../routes"
 import { useNavigate } from 'react-router-dom'
+import API_URL from "../config";
 export default function AddOPD() {
     const navigate = useNavigate();
 
     const addOPDForm = ()=>{
-        console.log("Add OPD butin click")
+        console.log("Add OPD button click")
         navigate("/formaddopd")
     }
   return (
