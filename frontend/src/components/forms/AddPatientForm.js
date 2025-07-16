@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import config from '../config';
 import axios from 'axios';
+import API from '../../api';
 export default function AddPatientForm() {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -28,27 +29,31 @@ export default function AddPatientForm() {
     };
 
     // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(formData);
-        try {
-            const response = await axios.post(`${config.API_URL}/patients/`, formData);
-            setrepsonseMessage(response.data.message);
-            setshowModal(true);
-            console.log(response.data)
-        }catch (error) {
-            console.error("Error submitting form:", error);
-          
-            const errorData = error.response?.data;
-            setrepsonseMessage(
-              typeof errorData === 'object'
-                ? JSON.stringify(errorData, null, 2)
-                : 'An unexpected error occurred.'
-            );
-            setshowModal(true);
-
-        }
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const username = sessionStorage.getItem("username"); // Adjust as needed
+    const dataToSend = {
+        ...formData,
+        username,
     };
+
+    try {
+        const response = await API.post(`patients/`, dataToSend);
+        setrepsonseMessage(response.data.message);
+        setshowModal(true);
+    } catch (error) {
+        console.error("Error submitting form:", error);
+        const errorData = error.response?.data;
+        setrepsonseMessage(
+            typeof errorData === 'object'
+            ? JSON.stringify(errorData, null, 2)
+            : 'An unexpected error occurred.'
+        );
+        setshowModal(true);
+    }
+};
+
 
     return (
         <>

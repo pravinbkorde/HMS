@@ -1,0 +1,136 @@
+.login-container {
+  max-width: 900px;
+  width: 100%;
+}
+
+.login-card {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.login-banner {
+  background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+  color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-banner h2 {
+  font-weight: 700;
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.login-banner p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.login-banner::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.login-banner::after {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.login-form {
+  padding: 3rem;
+  background: white;
+}
+
+.login-form h3 {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-control {
+  padding: 0.75rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #e1e5eb;
+  background-color: #f9fafc;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #4e73df;
+  box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+  background-color: #fff;
+}
+
+.input-group-text {
+  background-color: #f9fafc;
+  border: 1px solid #e1e5eb;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+}
+
+.forgot-password {
+  color: #4e73df;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #224abe;
+  text-decoration: underline;
+}
+
+.hospital-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.form-check-input:checked {
+  background-color: #4e73df;
+  border-color: #4e73df;
+}
+
+@media (max-width: 767.98px) {
+  .login-banner {
+    padding: 2rem;
+  }
+  
+  .login-form {
+    padding: 2rem;
+  }
+}

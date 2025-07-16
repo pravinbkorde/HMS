@@ -18,7 +18,7 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    // console.log(form);
     if (form.password !== form.password2) return alert('Passwords do not match');
 
     try {

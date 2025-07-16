@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import config from './config'
 import axios from 'axios'
+import API from '../api'
 export default function OPD() {
     const [AllPatients, setAllPatients] = useState([])
     const navigate = useNavigate();
+    const username = sessionStorage.getItem("username")
     const handleaddPatient = () => {
         navigate('/registerpatient')
     }
@@ -14,7 +16,7 @@ export default function OPD() {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const response = await axios.get(`${config.API_URL}/patients/get_all_patients/`);
+                const response = await API.get(`patients/get_all_patients/${username}`);
                 setAllPatients(response.data.all_patients);  // Adjust based on your API response
                 console.log(response.data.all_patients);
             } catch (error) {

@@ -1,18 +1,65 @@
 from django.db import models
 from django.db import transaction
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password
 
 
 class User(AbstractUser):
     ROLE_CHOICES = (
+        ('superadmin', 'Super Admin'),
         ('admin', 'Admin'),
         ('receptionist', 'Receptionist'),
         ('doctor', 'Doctor'),
     )
     role = models.CharField(max_length=20,choices=ROLE_CHOICES)
 
+class SuperAdmin(models.Model):
+    superadmin_id = models.CharField(max_length=50, unique=True, blank=True)
+    username = models.CharField(max_length=100, unique=True, blank=True)
+    email = models.EmailField(unique=True, blank=True)
+    password = models.CharField(max_length=128)  # hashed passwords are long
+    role = models.CharField(max_length=20, editable=False, default='superadmin')
+
+    def generate_superadmin_id(self):
+        with transaction.atomic():
+            last_superadmin = SuperAdmin.objects.all().order_by('superadmin_id').last()
+            
+            if last_superadmin:
+                # Get the number part of the last patient_id
+                last_id = int(last_superadmin.patient_id.split('-')[1])
+                new_id = f"SUP-{str(last_id + 1).zfill(3)}"  # Example: PAT-001, PAT-002, etc.
+            else:
+                new_id = "SUP-001"
+            
+            return new_id
+
+    def save(self, *args, **kwargs):
+        # Ensure password is hashed only once
+        if not self.password.startswith('pbkdf2_'):
+            self.password = make_password(self.password)
+
+        self.role = 'superadmin'
+
+        if not self.superadmin_id:
+            self.superadmin_id = self.generate_patient_id()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.username
+
+
+class AllUser(models.Model):
+    username = models.CharField(max_length=100,unique=True,blank=False)
+    email = models.EmailField(unique=True,blank=False)
+    password = models.CharField(max_length=500,blank=False)
+    role =models.CharField(max_length=20,null=False,blank=False)
+
+    def __str__(self):
+        return f"{self.username}"
+
 
 class PatientsInfo(models.Model):
+    user = models.ForeignKey("AllUser",on_delete=models.CASCADE,related_name='patients',blank=True, null=True)
     patient_id = models.CharField(max_length=20, unique=True, blank=True)
     first_name = models.CharField(max_length=100, null=False, blank=False)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
@@ -43,4 +90,66 @@ class PatientsInfo(models.Model):
         if not self.patient_id:
             self.patient_id = self.generate_patient_id()
 
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.patient_id}"
+
+
+class Doctor(models.Model):
+    DOCTOR_TYPE_CHOICES = [
+        ('consulting', 'Consulting Doctor'),
+        ('referring', 'Referring Doctor'),
+    ]
+
+    doctor_id = models.CharField(max_length=10, unique=True, blank=True)
+    doctor_type = models.CharField(max_length=10, choices=DOCTOR_TYPE_CHOICES)
+    
+    # User login
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile', null=True, blank=True)
+    
+    # Admin who created this doctor
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_doctors', limit_choices_to={'role': 'admin'})
+
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField(unique=True)
+    address = models.TextField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.doctor_id:
+            last_doctor = Doctor.objects.order_by('-id').first()
+            last_id = int(last_doctor.doctor_id.replace('DOC', '')) if last_doctor and last_doctor.doctor_id else 0
+            self.doctor_id = f'DOC{last_id + 1:04d}'
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Dr. {self.first_name} {self.last_name} ({self.get_doctor_type_display()})"
+
+
+class IPD(models.Model):
+    ipd_id = models.CharField(max_length=20, unique=True, blank=True)
+    patient = models.ForeignKey(PatientsInfo, on_delete=models.CASCADE, null=True, blank=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_ipds', limit_choices_to={'role': 'admin'})
+    admission_date = models.DateTimeField(auto_now_add=True)
+    discharge_date = models.DateTimeField(null=True, blank=True)
+    reason_for_admission = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+
+    def generate_ipd_id(self):
+        with transaction.atomic():
+            last_ipd = IPD.objects.order_by('-id').first()
+            last_num = 0
+            if last_ipd and last_ipd.ipd_id:
+                try:
+                    last_num = int(last_ipd.ipd_id.split('-')[1])
+                except:
+                    pass
+            return f"IPD-{str(last_num + 1).zfill(4)}"
+
+    def save(self, *args, **kwargs):
+        if not self.ipd_id:
+            self.ipd_id = self.generate_ipd_id()
         super().save(*args, **kwargs)

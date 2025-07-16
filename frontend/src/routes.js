@@ -61,10 +61,14 @@ const DoctorMaster = React.lazy(() => import("./components/DoctorMaster"))
 const DepartmentMaster = React.lazy(() => import("./components/DepartmentMaster"))
 const AddOPD = React.lazy(()=> import("./components/AddOPD"))
 const AddOpdForm = React.lazy(()=>import("./components/forms/AddOpdForm"))
-
+const Admincards = React.lazy(()=> import("./components/Admin Components/Admincards"))
+const DoctorManager = React.lazy(()=>import("./components/Admin Components/DoctorManager"))
+const CreateIPD = React.lazy(()=>import("./components/Admin Components/CreateIPD"))
 const routes = [
   { path: '/', exact: true, name: 'Home', element: OPD },
-  { path: '/dashboard', name: 'Dashboard', element: OPD },
+  { path: '/dashboard', name: 'Dashboard', element: Admincards },
+  { path: '/doctor', name: 'Doctor', element: DoctorManager },
+  { path: '/ipd', name: 'IPD', element: CreateIPD },
   { path: '/opd', name: 'opd', element: OPD },
   { path: '/addopd', name: 'addopd', element: AddOPD },
   { path: '/formaddopd', name: 'formaddopd', element: AddOpdForm },
