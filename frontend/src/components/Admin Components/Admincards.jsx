@@ -18,7 +18,7 @@ export default function AdminCards() {
       icon: "bi-calendar-check",
       color: "#4e73df",
       count: 124,
-      url: "/dashboard/appointment"
+      url: "/appointment"
     },
     {
       title: "Emergency",

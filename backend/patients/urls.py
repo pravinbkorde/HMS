@@ -14,5 +14,6 @@ urlpatterns = [
     path('doctors/create/', views.create_doctor),
     path('doctors/by_user/<str:username>/', views.get_doctors_by_user, name='get_doctors_by_user'),
     path('ipds/create/',views.create_ipd,name='create_ipd'),
-    path('get_ipd_ids_by_user/<str:username>/',views.get_ipd_ids_by_user,name="get_ipd_ids_by_user"),
+    path('get_ipd_ids_by_user/<str:username>/',views.get_ipd_ids_by_user,name="get_ipd_ids_by_user"),\
+    path('register_patient/',views.register_patient,name='register_patient'),
 ]

@@ -243,3 +243,16 @@ def assign_patient_doctor(request, ipd_id):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+def register_patient(request):
+    if request.method == "POST":
+        logger.debug("register_patient endpoint hit")
+        print("🔵 Patient Data Received:")
+        
+        # Print all key-value pairs
+        for key, value in request.data.items():
+            print(f"{key}: {value}")
+
+        return Response({"message": "Patient data received"}, status=status.HTTP_200_OK)
