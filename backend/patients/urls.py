@@ -14,6 +14,10 @@ urlpatterns = [
     path('doctors/create/', views.create_doctor),
     path('doctors/by_user/<str:username>/', views.get_doctors_by_user, name='get_doctors_by_user'),
     path('ipds/create/',views.create_ipd,name='create_ipd'),
-    path('get_ipd_ids_by_user/<str:username>/',views.get_ipd_ids_by_user,name="get_ipd_ids_by_user"),\
+    path('get_ipd_ids_by_user/<str:username>/',views.get_ipd_ids_by_user,name="get_ipd_ids_by_user"),
+    path("create_opd/",views.create_opd, name="create_opd"),
+    path("list_opds/",views.list_opds   ,name="list_opds"),
     path('register_patient/',views.register_patient,name='register_patient'),
+    path('get_all_admin/',views.get_all_admin,name='get_all_admin'),
+    path('restrict_admin/',views.restrict_admin,name="restrict_admin")
 ]

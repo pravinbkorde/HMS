@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from patients.models import PatientsInfo
 from django.contrib.auth.password_validation import validate_password
-from .models import User, AllUser, SuperAdmin, Doctor, IPD
+from .models import User, AllUser, SuperAdmin, Doctor, IPD,OPD
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -97,3 +97,7 @@ class IPDSerializer(serializers.ModelSerializer):
             validated_data['created_by'] = request.user
         return super().create(validated_data)
 
+class OPDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OPD
+        fields = '__all__'

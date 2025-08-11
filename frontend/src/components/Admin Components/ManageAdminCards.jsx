@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../Admin Components/admincss/AdminCards.css';
 
-export default function AdminCards() {
+export default function ManageAdminCards() {
   const navigate = useNavigate();
   useEffect(() => {
   const storedTheme = localStorage.getItem('coreui-free-react-admin-template-theme') || 'dark';
@@ -18,70 +18,70 @@ export default function AdminCards() {
       icon: "bi-calendar-check",
       color: "#4e73df",
       count: 124,
-      // url: "/appointment"
+      url: "/appointment"
     },
     {
       title: "Emergency",
       icon: "bi-exclamation-diamond",
       color: "#e74a3b",
       count: 18,
-      // url: "/dashboard/emergency"
+      url: "/dashboard/emergency"
     },
     {
       title: "IPD",
       icon: "bi-hospital",
       color: "#1cc88a",
       count: 86,
-      // url: "/ipd"
+      url: "/ipd"
     },
     {
       title: "OPD",
       icon: "bi-person-lines-fill",
       color: "#f6c23e",
       count: 156,
-      // url: "/createopd"
+      url: "/createopd"
     },
     {
       title: "Doctor",
       icon: "bi-person-badge",
       color: "#36b9cc",
       count: 42,
-      // url: "/doctor"
+      url: "/doctor"
     },
     {
       title: "Department",
       icon: "bi-diagram-3",
       color: "#6f42c1",
       count: 12,
-      // url: "/dashboard/department"
+      url: "/dashboard/department"
     },
     {
       title: "Medical",
       icon: "bi-capsule",
       color: "#fd7e14",
       count: 1240,
-      // url: "/dashboard/medical"
+      url: "/dashboard/medical"
     },
     {
       title: "Inventory",
       icon: "bi-box-seam",
       color: "#20c997",
       count: 578,
-      // url: "/dashboard/inventory"
+      url: "/dashboard/inventory"
     },
     {
       title: "Lab",
       icon: "bi-flask",
       color: "#6610f2",
       count: 324,
-      // url: "/dashboard/lab"
+      url: "/dashboard/lab"
     },
     {
       title: "Cashier",
       icon: "bi-cash-stack",
       color: "#5a5c69",
       count: "$24.5k",
-      // url: "/dashboard/cashier"
+      url: "/dashboard/cashier"
     }
   ];
 
@@ -107,12 +107,12 @@ export default function AdminCards() {
                   <small className="text-muted">Total {card.title.toLowerCase()}</small>
                 </div>
                 <div className="card-actions mt-3">
-                  {/* <button
+                  <button
                     className="btn btn-sm btn-outline-primary w-100"
                     onClick={() => navigate(card.url)}
                   >
                     <i className="bi bi-arrow-right-circle me-1"></i> Manage
-                  </button> */}
+                  </button>
                 </div>
               </div>
             </div>
@@ -140,12 +140,12 @@ export default function AdminCards() {
                   <small className="text-muted">Total {card.title.toLowerCase()}</small>
                 </div>
                 <div className="card-actions mt-3">
-                  {/* <button
+                  <button
                     className="btn btn-sm btn-outline-primary w-100"
                     onClick={() => navigate(card.url)}
                   >
                     <i className="bi bi-arrow-right-circle me-1"></i> Manage
-                  </button> */}
+                  </button>
                 </div>
               </div>
             </div>

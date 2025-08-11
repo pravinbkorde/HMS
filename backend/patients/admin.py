@@ -39,7 +39,7 @@ class PatientInfoAdmin(admin.ModelAdmin):
 admin.site.register(PatientsInfo, PatientInfoAdmin)
 
 class AlluserAdmin(admin.ModelAdmin):
-    list_display=("username","email","password","role")
+    list_display=("username","centerName","email","password","managePassowrd","role","restricted","created_at")
     search_fields = ("username","email")
 admin.site.register(AllUser,AlluserAdmin)
 

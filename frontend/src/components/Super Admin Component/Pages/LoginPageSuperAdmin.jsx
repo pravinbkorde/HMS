@@ -82,14 +82,14 @@ export default function LoginPageSuperAdmin() {
 
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
-                                    <label htmlFor="email" className="form-label">Email Address</label>
+                                    <label htmlFor="email" className="form-label text-success fw-bold">Enter Email Address</label>
                                     <div className="input-group">
-                                        <span className="input-group-text">
+                                        <span className="input-group-text bg-success">
                                             <i className="bi bi-envelope"></i>
                                         </span>
                                         <input
                                             type="email"
-                                            className="form-control"
+                                            className="form-control text-success"
                                             id="email"
                                             name="email"
                                             placeholder="Enter your email"
@@ -102,16 +102,16 @@ export default function LoginPageSuperAdmin() {
 
                                 <div className="mb-4">
                                     <div className="d-flex justify-content-between align-items-center">
-                                        <label htmlFor="password" className="form-label">Password</label>
-                                        <a href="/forgot-password" className="forgot-password">Forgot Password?</a>
+                                        <label htmlFor="password" className="form-label text-success fw-bold">Enter Password</label>
+                                        {/* <a href="/forgot-password" className="forgot-password">Forgot Password?</a> */}
                                     </div>
                                     <div className="input-group">
-                                        <span className="input-group-text">
+                                        <span className="input-group-text bg-success">
                                             <i className="bi bi-lock"></i>
                                         </span>
                                         <input
                                             type="password"
-                                            className="form-control"
+                                            className="form-control text-success"
                                             id="password"
                                             name="password"
                                             placeholder="Enter your password"
@@ -122,7 +122,7 @@ export default function LoginPageSuperAdmin() {
                                     </div>
                                 </div>
 
-                                <div className="mb-4">
+                                {/* <div className="mb-4">
                                     <div className="form-check">
                                         <input
                                             type="checkbox"
@@ -136,7 +136,7 @@ export default function LoginPageSuperAdmin() {
                                             Remember me on this device
                                         </label>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="d-grid">
                                     <button
@@ -160,12 +160,9 @@ export default function LoginPageSuperAdmin() {
 
                                 <div className="text-center mt-4">
                                     <p className="text-muted">
-                                        <small>Protected by enterprise-grade security</small>
-                                    </p>
-                                    <div>
                                         <i className="bi bi-shield-lock me-2 text-success"></i>
-                                        <span className="text-muted small">Secure Login</span>
-                                    </div>
+                                        <small className='text-success'>Protected by enterprise-grade security</small>
+                                    </p>
                                 </div>
                             </form>
                         </div>

@@ -49,10 +49,16 @@ class SuperAdmin(models.Model):
 
 
 class AllUser(models.Model):
+    centerName = models.CharField(max_length=100, blank=True,null=True)
     username = models.CharField(max_length=100,unique=True,blank=False)
     email = models.EmailField(unique=True,blank=False)
     password = models.CharField(max_length=500,blank=False)
     role =models.CharField(max_length=20,null=False,blank=False)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    restricted = models.BooleanField(default=False, null=True,blank=True)
+    managePassowrd = models.CharField(max_length=100,blank=True, null=True)
+
+    
 
     def __str__(self):
         return f"{self.username}"
@@ -153,3 +159,65 @@ class IPD(models.Model):
         if not self.ipd_id:
             self.ipd_id = self.generate_ipd_id()
         super().save(*args, **kwargs)
+
+
+
+
+
+class Patient(models.Model):
+    GENDER_CHOICES = [
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Other", "Other"),
+    ]
+
+    MARITAL_STATUS_CHOICES = [
+        ("Single", "Single"),
+        ("Married", "Married"),
+    ]
+
+    BLOOD_GROUP_CHOICES = [
+        ("A+", "A+"), ("A-", "A-"), ("B+", "B+"), ("B-", "B-"),
+        ("AB+", "AB+"), ("AB-", "AB-"), ("O+", "O+"), ("O-", "O-"),
+    ]
+    user = models.ForeignKey("AllUser",on_delete=models.CASCADE,blank=True, null=True)
+    patientName = models.CharField(max_length=100)
+    guardianName = models.CharField(max_length=100, blank=True, null=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    dob = models.DateField()
+    age = models.PositiveIntegerField()
+    bloodGroup = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES, blank=True, null=True)
+    maritalStatus = models.CharField(max_length=10, choices=MARITAL_STATUS_CHOICES, blank=True, null=True)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField(blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    remark = models.TextField(blank=True, null=True)
+    nid = models.CharField(max_length=20, unique=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.patientName
+    
+
+class OPD(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    opd_id = models.CharField(max_length=20, unique=True, blank=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True, blank=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
+    consultation_date = models.DateTimeField(auto_now_add=True)
+    symptoms = models.TextField(blank=True, null=True)
+    create_date= models.DateTimeField(auto_now_add=True, null=True,blank=True)
+
+    def generate_opd_id(self):
+        last = OPD.objects.order_by('id').last()
+        num = int(last.opd_id.split('-')[1]) if last and last.opd_id else 0
+        return f"OPD-{num + 1:04d}"
+
+    def save(self, *args, **kwargs):
+        if not self.opd_id:
+            self.opd_id = self.generate_opd_id()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.opd_id} - {self.patient.patientName}"

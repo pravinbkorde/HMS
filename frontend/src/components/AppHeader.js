@@ -145,7 +145,7 @@ const handleLogout = async () => {
             <CNavLink href="#">Users</CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
+            <CNavLink to="/manage" as={NavLink}>Manage</CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-auto">

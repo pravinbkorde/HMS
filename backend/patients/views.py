@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from patients.serializers import PatientFormSerializer
 from rest_framework import status
-from patients.models import PatientsInfo, Doctor, IPD
+from patients.models import PatientsInfo, Doctor, IPD, OPD
 from django.db import transaction
-from patients.serializers import PatientInfoSerializer, AlluserSerializer, DoctorSerializer, IPDSerializer
+from patients.serializers import PatientInfoSerializer, AlluserSerializer, DoctorSerializer, IPDSerializer, OPDSerializer
 from .serializers import RegisterSerializer
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -168,7 +168,7 @@ def is_admin_user(user):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_doctor(request):
-
+    """Function to create the doctor"""
     data = request.data.copy()
     data['created_by'] = request.user.id
 
@@ -245,8 +245,61 @@ def assign_patient_doctor(request, ipd_id):
     return Response(serializer.errors, status=400)
 
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_opd(request):
+    user = request.user
+    print(user)
+    doctor_id = request.data.get("doctor")
+
+    if not doctor_id:
+        return Response({'error': 'Doctor ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        doctor = Doctor.objects.get(id=doctor_id)
+    except Doctor.DoesNotExist:
+        return Response({'error': 'Doctor not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Create OPD
+    opd = OPD.objects.create(
+        user=user,
+        doctor=doctor
+        # patient is not added yet
+    )
+
+    serializer = OPDSerializer(opd)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_opds(request):
+    user = request.user
+    opds = OPD.objects.filter(user=user).order_by('-create_date')
+
+    data = []
+    for opd in opds:
+        if opd.doctor:
+            doctor_name = f"Dr. {opd.doctor.first_name} {opd.doctor.last_name}"
+            doctor_type = opd.doctor.doctor_type
+        else:
+            doctor_name = None
+            doctor_type = None
+
+        data.append({
+            'opd_id': opd.opd_id,
+            'doctor_name': doctor_name,
+            'doctor_type': doctor_type,
+            'create_date': opd.create_date,
+        })
+
+    return Response(data)
+
+
 @api_view(['POST'])
 def register_patient(request):
+    """Function to register the patient under the admin"""
     if request.method == "POST":
         logger.debug("register_patient endpoint hit")
         print("🔵 Patient Data Received:")
@@ -256,3 +309,27 @@ def register_patient(request):
             print(f"{key}: {value}")
 
         return Response({"message": "Patient data received"}, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_all_admin(request):
+    """Send all the Admin data to frontend for super admin"""
+    All_admin = AllUser.objects.filter(role="admin").values("centerName","username","email",'password',"restricted","managePassowrd","created_at","id")
+    # print(All_admin)
+
+    return Response({
+        "admins":list(All_admin)
+    })
+
+
+@api_view(["GET","POST"])
+@permission_classes([AllowAny])
+def restrict_admin(request):
+    print("URL Hit")
+    print("Data received:", request.data)  # This will show the data sent from frontend
+    admin_id = request.data.get("id")
+    value_restrict = request.data.get("restricted")
+    get_admin = AllUser.objects.filter(id=admin_id)
+    return Response({
+        "message": "Hit",
+    }, status=status.HTTP_200_OK)
